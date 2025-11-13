@@ -1,0 +1,91 @@
+@model WebApplication27.Models.ImageMetadata
+
+@{
+    ViewData["Title"] = "Детали изображения";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <img src="@Model.StorageUrl" 
+                             class="img-fluid rounded shadow" 
+                             alt="@Model.OriginalFileName"
+                             style="max-height: 500px;">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th scope="row" style="width: 30%;">
+                                        Оригинальное имя файла
+                                    </th>
+                                    <td>@Model.OriginalFileName</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Имя файла в хранилище
+                                    </th>
+                                    <td><code>@Model.FileName</code></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Тип контента
+                                    </th>
+                                    <td><code>@Model.ContentType</code></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Размер файла
+                                    </th>
+                                    <td>@((Model.FileSize / 1024.0).ToString("F2")) KB (@Model.FileSize байт)</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Дата загрузки
+                                    </th>
+                                    <td>@Model.UploadedAt.ToString("dd.MM.yyyy HH:mm:ss") UTC</td>
+                                </tr>
+                                @if (!string.IsNullOrEmpty(Model.Description))
+                                {
+                                    <tr>
+                                        <th scope="row">
+                                            Описание
+                                        </th>
+                                        <td>@Model.Description</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <th scope="row">
+                                        URL в хранилище
+                                    </th>
+                                    <td>
+                                        <a href="@Model.StorageUrl" target="_blank" class="text-break">
+                                            @Model.StorageUrl
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-between mt-4">
+                        <a asp-action="Index" class="btn btn-secondary">Назад к галерее</a>
+                        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" 
+                              onsubmit="return confirm('Вы уверены, что хотите удалить это изображение?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger">Удалить изображение</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

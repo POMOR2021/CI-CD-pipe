@@ -1,0 +1,59 @@
+@model IEnumerable<WebApplication27.Models.ImageMetadata>
+
+@{
+    ViewData["Title"] = "Галерея изображений";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4">@ViewData["Title"]</h1>
+        <a asp-action="Upload" class="btn btn-primary">Загрузить изображение</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Пока нет загруженных изображений. <a asp-action="Upload">Загрузить изображение</a>
+        </div>
+    }
+    else
+    {
+        <ul class="list-group">
+            @foreach (var item in Model)
+            {
+                <li class="list-group-item">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="fw-semibold text-truncate" title="@item.OriginalFileName">@item.OriginalFileName</div>
+                            <small class="text-muted">@item.UploadedAt.ToString("dd.MM.yyyy HH:mm") · @((item.FileSize / 1024.0).ToString("F2")) KB</small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Детали</a>
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Удалить изображение?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</div>
+

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: imagegallery-service
+  namespace: default
+  labels:
+    app: imagegallery
+spec:
+  type: LoadBalancer
+  selector:
+    app: imagegallery
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+  sessionAffinity: None

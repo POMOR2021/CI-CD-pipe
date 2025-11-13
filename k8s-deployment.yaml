@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imagegallery-deployment
+  namespace: default
+  labels:
+    app: imagegallery
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: imagegallery
+  template:
+    metadata:
+      labels:
+        app: imagegallery
+    spec:
+      containers:
+      - name: imagegallery
+        image: cr.yandex/<your-registry-id>/imagegallery:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: imagegallery-config
+              key: ASPNETCORE_ENVIRONMENT
+        - name: ASPNETCORE_URLS
+          valueFrom:
+            configMapKeyRef:
+              name: imagegallery-config
+              key: ASPNETCORE_URLS
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: imagegallery-secrets
+              key: connection-string
+        - name: YandexStorage__AccessKey
+          valueFrom:
+            secretKeyRef:
+              name: imagegallery-secrets
+              key: yandex-access-key
+        - name: YandexStorage__SecretKey
+          valueFrom:
+            secretKeyRef:
+              name: imagegallery-secrets
+              key: yandex-secret-key
+        - name: YandexStorage__BucketName
+          valueFrom:
+            secretKeyRef:
+              name: imagegallery-secrets
+              key: yandex-bucket-name
+        - name: YandexStorage__ServiceUrl
+          valueFrom:
+            configMapKeyRef:
+              name: imagegallery-config
+              key: YandexStorage__ServiceUrl
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always

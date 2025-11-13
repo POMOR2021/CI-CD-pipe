@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Загрузить изображение";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Upload" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label for="file" class="form-label fw-bold">Файл изображения</label>
+                            <input type="file" class="form-control" id="file" name="file" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" required>
+                            <div class="form-text">Разрешенные форматы: JPG, JPEG, PNG, GIF, WEBP. Максимальный размер: 10 MB</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">Описание (необязательно)</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" maxlength="1000" placeholder="Добавьте описание к вашему изображению..."></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">Назад к галерее</a>
+                            <button type="submit" class="btn btn-primary">Загрузить изображение</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

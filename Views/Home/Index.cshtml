@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Главная страница";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="h3">Галерея изображений</h1>
+    </div>
+
+    <div class="text-center">
+        <a asp-controller="Images" asp-action="Index" class="btn btn-primary me-2">Перейти к галерее</a>
+        <a asp-controller="Images" asp-action="Upload" class="btn btn-secondary">Загрузить изображение</a>
+    </div>
+</div>
